@@ -35,7 +35,7 @@ app.post("/user", async (req, res) => {
     const userData = req.body;
     userData.created_at = new Date().toISOString();
     userData.last_loggedIn = new Date().toISOString();
-    userData.role = "customer";
+    userData.role = "borrower";
 
     const query = { email: userData.email };
     const existing = await usersCollection.findOne(query);
