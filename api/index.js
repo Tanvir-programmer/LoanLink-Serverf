@@ -55,7 +55,27 @@ app.post("/user", async (req, res) => {
       .json({ message: "Database service unavailable.", error: err.message });
   }
 });
+app.get("/user/:email", async (req, res) => {
+  try {
+    const client = await clientPromise;
+    const db = client.db("loanlink");
+    const email = req.params.email;
 
+    // The { projection: { role: 1 } } tells MongoDB to ONLY send the role field
+    const user = await db
+      .collection("users")
+      .findOne({ email: email }, { projection: { role: 1, _id: 0 } });
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // This will send back an object like: { "role": "borrower" }
+    res.json(user);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
 // --- APPLY LOAN ---
 app.post("/apply-loan", async (req, res) => {
   try {
