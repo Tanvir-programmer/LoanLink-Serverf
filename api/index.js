@@ -17,7 +17,7 @@ app.use(
     origin: [
       "http://localhost:5173",
       "http://localhost:5174",
-      "https://your-vercel-frontend-url.vercel.app", // 👈 Replace with your actual frontend URL
+      "https://loan-link-server-two.vercel.app", // 👈 Replace with your actual frontend URL
     ],
     credentials: true,
   })
