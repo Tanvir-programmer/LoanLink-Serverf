@@ -9,20 +9,10 @@ import Stripe from "stripe";
 dotenv.config({ path: path.resolve(process.cwd(), ".env") });
 
 const app = express();
-
-// ✅ CORS: Configured for Local and Production
-app.use(
-  cors({
-    origin: [
-      "http://localhost:5173",
-      "http://localhost:5174",
-      "https://loan-link-server-two.vercel.app", // Ensure this matches your FRONTEND URL
-    ],
-    credentials: true,
-  })
-);
-
+app.use(cors());
 app.use(express.json());
+
+// stripe payment code
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 const port = process.env.PORT || 3000;
