@@ -111,7 +111,7 @@ app.post("/user", async (req, res) => {
             last_loggedIn: now,
             image: safeImage,
           },
-        }
+        },
       );
 
       return res.json({ message: "User updated successfully" });
@@ -133,7 +133,34 @@ app.post("/user", async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 });
+// ✅ Add this route to your backend code
+app.patch("/loan-applications/:id", async (req, res) => {
+  try {
+    const database = await getDb();
+    const id = req.params.id;
+    const { status, approvedAt } = req.body;
 
+    const filter = { _id: new ObjectId(id) };
+    const updateDoc = {
+      $set: {
+        status: status,
+        approvedAt: approvedAt,
+      },
+    };
+
+    const result = await database
+      .collection("loanApplications")
+      .updateOne(filter, updateDoc);
+
+    if (result.matchedCount === 0) {
+      return res.status(404).json({ message: "Application not found" });
+    }
+
+    res.json({ message: "Updated successfully", result });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
 // Get user role
 app.get("/user/role/:email", async (req, res) => {
   try {
@@ -142,7 +169,7 @@ app.get("/user/role/:email", async (req, res) => {
       .collection("users")
       .findOne(
         { email: req.params.email },
-        { projection: { role: 1, _id: 0 } }
+        { projection: { role: 1, _id: 0 } },
       );
     res.json(user);
   } catch (err) {
